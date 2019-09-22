@@ -60,7 +60,7 @@ def loginToStudio(cookie):
                               r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
             return
         except:
-            # If these keys don't exist after 20 seconds, something has probably gone wrong
+            # If we still can't set these keys after 20 seconds, something has probably gone wrong
             if secondsWaited > 20:
                 print('\nError: Failed to login to Studio')
                 exit(1)

@@ -1,0 +1,20 @@
+image:
+- Visual Studio 2015
+
+install:
+# Install rust and build run-in-roblox
+- appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+- rustup-init -yv
+- set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+- rustc -vV
+- cargo -vV
+- cargo install run-in-roblox
+# Install python dependencies and run Roblox install script
+- C:\\Python34\\Scripts\\pip.exe install wget
+- C:\\Python34\\Scripts\\pip.exe install psutil
+- ps: C:\\Python34\\python.exe install.py $env:ROBLOSECURITY
+
+build: false
+
+test_script:
+- run-in-roblox test.lua

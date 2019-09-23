@@ -34,7 +34,7 @@ def installStudio(launcherPath):
             break
         # If Studio still hasn't installed after ten minutes, something has probably gone wrong
         elif secondsWaited > 600:
-            print('\nError: Studio installation timed out')
+            print('\nError: Studio installation timed out', flush=True)
             os.remove(launcherPath)
             exit(1)
         time.sleep(1)
@@ -49,32 +49,51 @@ def loginToStudio(cookie):
             key = "SEC::<YES>,EXP::<9999-01-01T00:00:00Z>,COOK::<{}>".format(
                 cookie)
 
-            reg_robloxStudioBrowser = winreg.OpenKey(
-                winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser')
             reg_robloxDotCom = winreg.OpenKey(
-                reg_robloxStudioBrowser,
-                r'roblox.com',
-                access=winreg.KEY_WRITE,
-            )
-            winreg.SetValueEx(reg_robloxDotCom,
-                              r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
+                winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser\\roblox.com', access=winreg.KEY_WRITE)
+            winreg.SetValueEx(reg_robloxDotCom, r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
+            winreg.CloseKey(reg_robloxDotCom)
             return
         except:
             # If we still can't set these keys after 20 seconds, something has probably gone wrong
             if secondsWaited > 20:
-                print('\nError: Failed to login to Studio')
+                print('\nError: Failed to login to Studio', flush=True)
                 exit(1)
             time.sleep(0.1)
             secondsWaited += 0.1
 
+def killStudioProcess():
+    os.system("taskkill /im RobloxStudioBeta.exe")
 
-print('\nDownloading RobloxStudioLauncherBeta.exe')
+def waitForContentPath():
+    # The content path is used by applications like run-in-roblox to identify Studio's install directory
+    # As it is not created until studio closes, we need to wait for it
+    secondsWaited = 0
+    while True:
+        try:
+            regKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
+            winreg.QueryValueEx(regKey, r'ContentFolder')
+            winreg.CloseKey(regKey)
+            return
+        except:
+            # If we still can't find this key after 20 seconds, something has probably gone wrong
+            if secondsWaited > 20:
+                print('\nError: Studio content path not registered. Studio has installed but applications may not be able to find it.', flush=True)
+                exit(1)
+            time.sleep(0.1)
+            secondsWaited += 0.1
+
+print('\nDownloading RobloxStudioLauncherBeta.exe', flush=True)
 launcherPath = downloadStudioLauncher()
 
-print('\nInstalling Roblox Studio')
+print('\nInstalling Roblox Studio', flush=True)
 installStudio(launcherPath)
 
-print('\nLogging in to Studio')
+print('\nLogging in to Studio', flush=True)
 loginToStudio(sys.argv[1])
 
-print('\nStudio installed and authenticated')
+print('\nWaiting for content path to be registered', flush=True)
+killStudioProcess()
+waitForContentPath()
+
+print('\nStudio installed and authenticated', flush=True)

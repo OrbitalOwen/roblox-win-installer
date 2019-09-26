@@ -5,6 +5,7 @@ import subprocess
 import time
 import psutil
 import winreg
+import pathlib
 
 
 def checkIfProcessRunning(processName):
@@ -30,12 +31,10 @@ def installStudio(launcherPath):
     while True:
         # When RobloxStudioBeta.exe is running, the installer has completed
         if checkIfProcessRunning('RobloxStudioBeta.exe'):
-            os.remove(launcherPath)
             break
         # If Studio still hasn't installed after ten minutes, something has probably gone wrong
         elif secondsWaited > 600:
             print('\nError: Studio installation timed out', flush=True)
-            os.remove(launcherPath)
             exit(1)
         time.sleep(1)
         secondsWaited += 1
@@ -83,6 +82,13 @@ def waitForContentPath():
             time.sleep(0.1)
             secondsWaited += 0.1
 
+def createPluginsDirectory():
+    # The plugins directory isn't created during the install process
+    userDir = pathlib.Path.home()
+    pluginsDir = os.path.join(userDir, "AppData", "Local", "Roblox", "Plugins")
+    if not os.path.isdir(pluginsDir):
+        os.makedirs(pluginsDir)
+
 print('\nDownloading RobloxStudioLauncherBeta.exe', flush=True)
 launcherPath = downloadStudioLauncher()
 
@@ -95,5 +101,8 @@ loginToStudio(sys.argv[1])
 print('\nWaiting for content path to be registered', flush=True)
 killStudioProcess()
 waitForContentPath()
+
+print('\nCreating plugins directory', flush=True)
+createPluginsDirectory()
 
 print('\nStudio installed and authenticated', flush=True)

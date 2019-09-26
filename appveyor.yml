@@ -7,9 +7,9 @@ environment:
 
 install:
 # Install python dependencies and run Roblox install script
-- C:\\Python34\\Scripts\\pip.exe install wget
-- C:\\Python34\\Scripts\\pip.exe install psutil
-- ps: C:\\Python34\\python.exe install.py $env:ROBLOSECURITY
+- C:\\Python37\\Scripts\\pip.exe install wget
+- C:\\Python37\\Scripts\\pip.exe install psutil
+- ps: C:\\Python37\\python.exe install.py $env:ROBLOSECURITY
 
 build: false
 

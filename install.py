@@ -43,7 +43,8 @@ def loginToStudio(cookie):
 
             reg_robloxDotCom = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser\\roblox.com', access=winreg.KEY_WRITE)
-            winreg.SetValueEx(reg_robloxDotCom, r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
+            winreg.SetValueEx(reg_robloxDotCom,
+                              r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
             winreg.CloseKey(reg_robloxDotCom)
             return
         except:
@@ -86,7 +87,9 @@ installStudio(launcherPath)
 print('\nLogging in to Studio', flush=True)
 loginToStudio(sys.argv[1])
 
-print('\nWaiting for content path to be registered', flush=True)
+print('\nWaiting before killing studio', flush=True)
+time.sleep(5)
+print('\nKilled studio, waiting for content path to be registered', flush=True)
 killStudioProcess()
 waitForContentPath()
 

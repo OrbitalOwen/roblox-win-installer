@@ -59,6 +59,10 @@ def killStudioProcess():
     os.system("taskkill /im RobloxStudioBeta.exe")
 
 
+def forceKillStudioProcess():
+    os.system("taskkill /f /im RobloxStudioBeta.exe")
+
+
 def waitForContentPath():
     # The content path is used by applications like run-in-roblox to identify Studio's install directory
     # As it is not created until studio closes, we need to wait for it
@@ -101,3 +105,4 @@ print('\nCreating plugins directory', flush=True)
 createPluginsDirectory()
 
 print('\nStudio installed and authenticated', flush=True)
+forceKillStudioProcess()

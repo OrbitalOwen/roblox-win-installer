@@ -75,7 +75,6 @@ def waitForContentPath():
             winreg.CloseKey(regKey)
             return
         except:
-            print('\nNo path', flush=True)
             time.sleep(0.1)
 
 
@@ -97,11 +96,12 @@ studioPath = installStudio(launcherPath)
 print('\nLogging in to Studio', flush=True)
 loginToStudio(sys.argv[1])
 
-print('\nKilled studio and relaunched studio', flush=True)
+print('\nKilled and relaunched studio', flush=True)
 killStudioProcess()
 subprocess.Popen([studioPath])
 print('\nWaiting for content path to be registered', flush=True)
 waitForContentPath()
+killStudioProcess()
 
 print('\nCreating plugins directory', flush=True)
 createPluginsDirectory()

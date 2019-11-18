@@ -88,7 +88,7 @@ print('\nLogging in to Studio', flush=True)
 loginToStudio(sys.argv[1])
 
 print('\nWaiting before killing studio', flush=True)
-time.sleep(5)
+time.sleep(10)
 print('\nKilled studio, waiting for content path to be registered', flush=True)
 killStudioProcess()
 waitForContentPath()

@@ -17,15 +17,6 @@ def getProcessPath(processName):
             pass
 
 
-def relaunchProcess(processName):
-    for proc in psutil.process_iter():
-        try:
-            if processName.lower() in proc.name().lower():
-                subprocess.Popen([proc.exe()])
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-
-
 def downloadStudioLauncher():
     launcherPath = os.path.join(sys.path[0], 'RobloxStudioLauncherBeta.exe')
     url = 'http://setup.roblox.com/RobloxStudioLauncherBeta.exe'
@@ -33,8 +24,12 @@ def downloadStudioLauncher():
     return launcherPath
 
 
+def launchProcess(executablePath):
+    subprocess.Popen([executablePath])
+
+
 def installStudio(launcherPath):
-    subprocess.Popen([launcherPath])
+    launchProcess(launcherPath)
     while True:
         # When RobloxStudioBeta.exe is running, the installer has completed
         path = getProcessPath('RobloxStudioBeta.exe')
@@ -98,7 +93,7 @@ loginToStudio(sys.argv[1])
 
 print('\nKilled and relaunched studio', flush=True)
 killStudioProcess()
-subprocess.Popen([studioPath])
+launchProcess(studioPath)
 print('\nWaiting for content path to be registered', flush=True)
 waitForContentPath()
 killStudioProcess()

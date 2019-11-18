@@ -66,6 +66,7 @@ def waitForContentPath():
             winreg.CloseKey(regKey)
             return
         except:
+            print('\nNo path', flush=True)
             time.sleep(0.1)
 
 

@@ -8,14 +8,22 @@ import winreg
 import pathlib
 
 
-def checkIfProcessRunning(processName):
+def getProcessPath(processName):
     for proc in psutil.process_iter():
         try:
             if processName.lower() in proc.name().lower():
-                return True
+                return proc.exe()
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
-    return False
+
+
+def relaunchProcess(processName):
+    for proc in psutil.process_iter():
+        try:
+            if processName.lower() in proc.name().lower():
+                subprocess.Popen([proc.exe()])
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
 
 
 def downloadStudioLauncher():
@@ -29,8 +37,9 @@ def installStudio(launcherPath):
     subprocess.Popen([launcherPath])
     while True:
         # When RobloxStudioBeta.exe is running, the installer has completed
-        if checkIfProcessRunning('RobloxStudioBeta.exe'):
-            break
+        path = getProcessPath('RobloxStudioBeta.exe')
+        if path:
+            return path
         time.sleep(1)
 
 
@@ -83,15 +92,15 @@ print('\nDownloading RobloxStudioLauncherBeta.exe', flush=True)
 launcherPath = downloadStudioLauncher()
 
 print('\nInstalling Roblox Studio', flush=True)
-installStudio(launcherPath)
+studioPath = installStudio(launcherPath)
 
 print('\nLogging in to Studio', flush=True)
 loginToStudio(sys.argv[1])
 
-print('\nWaiting before killing studio', flush=True)
-time.sleep(10)
-print('\nKilled studio, waiting for content path to be registered', flush=True)
+print('\nKilled studio and relaunched studio', flush=True)
 killStudioProcess()
+subprocess.Popen([studioPath])
+print('\nWaiting for content path to be registered', flush=True)
 waitForContentPath()
 
 print('\nCreating plugins directory', flush=True)

@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: pip install wget psutil
-      - run: python install.py "${{ secrets.ROBLOSECURITY }}
+      - run: python install.py "${{ secrets.ROBLOSECURITY }}"
       - run: Invoke-WebRequest "https://github.com/OrbitalOwen/run-in-roblox/releases/download/0.2.0/run-in-roblox.exe" -OutFile run-in-roblox.exe
       - run: Set-Content -Path test.lua -Value "print('hi')"
       - run: run-in-roblox.exe -t 1800 test.lua

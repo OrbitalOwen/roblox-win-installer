@@ -1,0 +1,15 @@
+name: name
+
+on: [push]
+
+jobs:
+  name:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+          pip install wget psutil
+          python install.py "${{ secrets.ROBLOSECURITY }}"
+          "print('hi')" | Out-File test.lua
+          Invoke-WebRequest "https://github.com/OrbitalOwen/run-in-roblox/releases/download/0.2.0/run-in-roblox.exe" -OutFile run-in-roblox.exe
+          run-in-roblox.exe -t 600 .\test.lua

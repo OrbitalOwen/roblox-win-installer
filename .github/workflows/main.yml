@@ -1,4 +1,4 @@
-name: Roblox
+name: roblox-win-installer
 
 on:
   push:
@@ -7,13 +7,18 @@ on:
     branches: [master]
 
 jobs:
-  name:
+  name: roblox-win-installer
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v1
-      - run: |
+      - name: install roblox
+        uses: actions/checkout@v1
+        run: |
           pip install wget psutil
           python install.py "${{ secrets.ROBLOSECURITY }}"
+      - name: download run-in-roblox
+        run: Invoke-WebRequest "https://github.com/OrbitalOwen/run-in-roblox/releases/download/0.2.0/run-in-roblox.exe" -OutFile run-in-roblox.exe
+      - name: use run-in-roblox
+        run: |
           "print('hi')" | Out-File test.lua
-          Invoke-WebRequest "https://github.com/OrbitalOwen/run-in-roblox/releases/download/0.2.0/run-in-roblox.exe" -OutFile run-in-roblox.exe
           run-in-roblox.exe -t 600 .\test.lua
+

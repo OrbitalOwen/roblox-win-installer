@@ -9,7 +9,6 @@ install:
     # Install python dependencies and run Roblox install script
     - C:\\Python37\\Scripts\\pip.exe install wget psutil
     - ps: Start-FileDownload 'https://github.com/CodeKingdomsTeam/run-in-roblox/releases/download/demo-with-improvements/run-in-roblox.exe'
-    - ps: Start-FileDownload 'https://raw.githubusercontent.com/OrbitalOwen/roblox-win-installer/master/install.py'
     - ps: C:\\Python37\\python.exe install.py $env:ROBLOSECURITY
     - ps: Start-sleep -s 5
     - ps: Start-Process 'taskkill' -ArgumentList '/F /IM RobloxStudioBeta.exe' -Verb runAs -Wait
@@ -17,5 +16,4 @@ install:
 build: false
 
 test_script:
-    # Use precompiled run-in-roblox to run test script
     - run-in-roblox.exe test.lua

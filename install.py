@@ -5,16 +5,29 @@ import subprocess
 import time
 import psutil
 import winreg
+import pathlib
 
 
-def checkIfProcessRunning(processName):
+def log(string):
+    print('\n{}\n'.format(string), flush=True)
+
+
+def retryUntilSuccess(func):
+    while True:
+        try:
+            func()
+            return
+        except:
+            time.sleep(0.1)
+
+
+def getProcessPath(processName):
     for proc in psutil.process_iter():
         try:
             if processName.lower() in proc.name().lower():
-                return True
+                return proc.exe()
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
-    return False
 
 
 def downloadStudioLauncher():
@@ -24,57 +37,90 @@ def downloadStudioLauncher():
     return launcherPath
 
 
+def launchProcess(executablePath):
+    subprocess.Popen([executablePath])
+
+
 def installStudio(launcherPath):
-    subprocess.Popen([launcherPath])
-    secondsWaited = 0
+    launchProcess(launcherPath)
     while True:
         # When RobloxStudioBeta.exe is running, the installer has completed
-        if checkIfProcessRunning('RobloxStudioBeta.exe'):
-            os.remove(launcherPath)
-            break
-        # If Studio still hasn't installed after ten minutes, something has probably gone wrong
-        elif secondsWaited > 600:
-            print('\nError: Studio installation timed out')
-            os.remove(launcherPath)
-            exit(1)
+        path = getProcessPath('RobloxStudioBeta.exe')
+        if path:
+            return path
         time.sleep(1)
-        secondsWaited += 1
 
 
-def loginToStudio(cookie):
-    secondsWaited = 0
-    # These keys aren't created until Studio's first run, which we need to wait for
-    while True:
-        try:
-            key = "SEC::<YES>,EXP::<9999-01-01T00:00:00Z>,COOK::<{}>".format(
-                cookie)
+# Method inspired by: https://github.com/jeparlefrancais/run-in-roblox-ci
+def loginToStudio():
+    # These keys aren't created until studio's first run, keep retrying until they have been
 
-            reg_robloxStudioBrowser = winreg.OpenKey(
-                winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser')
-            reg_robloxDotCom = winreg.OpenKey(
-                reg_robloxStudioBrowser,
-                r'roblox.com',
-                access=winreg.KEY_WRITE,
-            )
-            winreg.SetValueEx(reg_robloxDotCom,
-                              r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
-            return
-        except:
-            # If we still can't set these keys after 20 seconds, something has probably gone wrong
-            if secondsWaited > 20:
-                print('\nError: Failed to login to Studio')
-                exit(1)
-            time.sleep(0.1)
-            secondsWaited += 0.1
+    def func():
+        key = "SEC::<YES>,EXP::<9999-01-01T00:00:00Z>,COOK::<{}>".format(
+            sys.argv[1])
+
+        reg_robloxDotCom = winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser\\roblox.com', access=winreg.KEY_WRITE)
+        winreg.SetValueEx(reg_robloxDotCom,
+                          r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
+        winreg.CloseKey(reg_robloxDotCom)
+
+    retryUntilSuccess(func)
 
 
-print('\nDownloading RobloxStudioLauncherBeta.exe')
+def requestKillStudioProcess():
+    os.system("taskkill /im RobloxStudioBeta.exe")
+
+
+def forceKillStudioProcess():
+    for proc in psutil.process_iter():
+        if proc.name() == "RobloxStudioBeta.exe":
+            proc.kill()
+
+
+def waitForContentPath():
+    # The content path is used by applications like run-in-roblox to identify Studio's install directory
+    # These keys aren't created until studio closes, so keep retrying until they exist
+
+    def func():
+        regKey = winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
+        winreg.QueryValueEx(regKey, r'ContentFolder')
+        winreg.CloseKey(regKey)
+
+    retryUntilSuccess(func)
+
+
+def createPluginsDirectory():
+    # The plugins directory isn't created during the install process
+    # Tools like run-in-roblox need this, so let's create it
+    userDir = pathlib.Path.home()
+    pluginsDir = os.path.join(userDir, "AppData", "Local", "Roblox", "Plugins")
+    if not os.path.isdir(pluginsDir):
+        os.makedirs(pluginsDir)
+
+
+log('Downloading Studio')
 launcherPath = downloadStudioLauncher()
 
-print('\nInstalling Roblox Studio')
-installStudio(launcherPath)
+log('Installing Studio')
+studioPath = installStudio(launcherPath)
 
-print('\nLogging in to Studio')
-loginToStudio(sys.argv[1])
+log('Logging into Studio')
+loginToStudio()
 
-print('\nStudio installed and authenticated')
+log('Launching Studio')
+launchProcess(studioPath)
+
+log('Waiting for content path')
+requestKillStudioProcess()
+waitForContentPath()
+
+log('Creating plugins directory')
+createPluginsDirectory()
+
+log('Pausing, then closing studio')
+time.sleep(5)
+forceKillStudioProcess()
+
+log('Studio setup complete')

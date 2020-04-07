@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  name: roblox-win-installer
+  name:
     runs-on: windows-latest
     steps:
       - name: install roblox
@@ -21,4 +21,3 @@ jobs:
         run: |
           "print('hi')" | Out-File test.lua
           run-in-roblox.exe -t 600 .\test.lua
-

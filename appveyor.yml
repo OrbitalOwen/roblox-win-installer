@@ -1,0 +1,19 @@
+image:
+    - Visual Studio 2015
+
+environment:
+    ROBLOSECURITY:
+        secure: ak31MiW5iL43/H6nC4YyXUy6yUS7prZW8aDMgoSQGoSdw2wIeCumtQWx3PqsyQqiHxvUH8+QpvIBnsnK7ii0iPkk7RUnL0l2c6qSQEwUtWDsG1gdnMXrj7vJNcaubPQ+db4NmiH3mO6xwPpqxZV45/jgNI9JxjcSRwSscAnahpGo5hKZzoIDoGFH8IlMTlPMfeEdL+OuJQvXFB0DlyCfTxZCO8X8xozLjC1IDJ8S64dRLauw3nW/0iUFSqXDwnUFxWxWZErA5E01RbY0DOIYr3UAbKRIdT7zuYT9sZS4Vqm8qTTRmtL/s+TcF2ttk4TPjH/J3xR1+jICyWCWxyZF0YjPUsg4i3w++8BbAFynr3vZHP6Mqu+nU6Lw48U/kr1sFzwLAx2gXzW/DgDTJzDSJZXYO7PEjSWRLrGoRi3easuH1jj7+NjbtMIEnHE1EPuP7TkO0NisuadtH340+IYmIb7L/a1kfBnMNleT/KCKcU693gscjLy9v5vXF7OgRe4TAq7+qSAicC1PSzF12QG4saz0gtwdlKp1dumYj4Utgk319XhKIi0SoDLVhM7hxme3YbLn0rlvLdAudxWkoI4YtXyQe/HctTxtkVDidtkHdV6vnsZsYtPqbwz8PQfr9NAbW8Iirx2JBAM0fwOEotyiFGE5LVS7HvxxTu7HSfk1UWIzcbygx7xCzREHXuOhPUm5lctKt8FQF8MsRAgGH119UzXtAikoEHCPluvqwIOzvdgaRWt3FXj2poLKwLBxmqJ/aSB1Nyhqib9U3IeH9fLgi6gZraria+zDLo9TyWNWz4BaQZ3pjhE8G69GMihS+HE/MH071O5E610bbEO1AtwsorgrhMAd2TRd5IvEItdvVzLf9chF4uXRPZ6k+Uboqa/YX7uRerozKvyS4WEgffvht45WXK2mzb28KxnCdlYMUc8=
+
+install:
+    # Install python dependencies and run Roblox install script
+    - C:\\Python37\\Scripts\\pip.exe install wget psutil
+    - ps: Start-FileDownload 'https://github.com/CodeKingdomsTeam/run-in-roblox/releases/download/demo-with-improvements/run-in-roblox.exe'
+    - ps: C:\\Python37\\python.exe install.py $env:ROBLOSECURITY
+    - ps: Start-sleep -s 5
+    - ps: Start-Process 'taskkill' -ArgumentList '/F /IM RobloxStudioBeta.exe' -Verb runAs -Wait
+
+build: false
+
+test_script:
+    - run-in-roblox.exe test.lua

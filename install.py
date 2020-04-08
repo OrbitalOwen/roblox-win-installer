@@ -112,15 +112,15 @@ def createPluginsDirectory():
         os.makedirs(pluginsDir)
 
 
-def removeRobloxDirectory():
-    log('Removing Roblox directory from Documents')
+def removeAutoSaveDirectory():
+    log('Deleting AutoSave directory if presenmt')
 
     # Required in cases where roblox has been previously installed & used
     # Removing this folder prevents the auto-save recovery dialogue from appearing
     userDir = pathlib.Path.home()
-    robloxDir = os.path.join(userDir, "Documents", "Roblox")
-    if os.path.isdir(robloxDir):
-        shutil.rmtree(robloxDir)
+    autoSavesDir = os.path.join(userDir, "Documents", "ROBLOX", "AutoSaves")
+    if os.path.isdir(autoSavesDir):
+        shutil.rmtree(autoSavesDir)
 
 
 def createSettingsFile():
@@ -153,6 +153,7 @@ launchProcess(studioPath)
 requestKillStudioProcess()
 waitForContentPath()
 createPluginsDirectory()
+removeAutoSaveDirectory()
 createSettingsFile()
 time.sleep(5)
 forceKillStudioProcess()

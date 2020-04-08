@@ -10,7 +10,7 @@ import shutil
 
 
 def log(string):
-    print('\n{}\n'.format(string), flush=True)
+    print(string, flush=True)
 
 
 def retryUntilSuccess(func):
@@ -113,12 +113,25 @@ def createPluginsDirectory():
 
 
 def removeRobloxDirectory():
+    log('Removing Roblox directory from Documents')
+
     # Required in cases where roblox has been previously installed & used
     # Removing this folder prevents the auto-save recovery dialogue from appearing
     userDir = pathlib.Path.home()
     robloxDir = os.path.join(userDir, "Documents", "Roblox")
     if os.path.isdir(robloxDir):
         shutil.rmtree(robloxDir)
+
+
+def createSettingsFile():
+    log('Creating settings file')
+
+    # We want this to run fast, so let's disable graphics
+    # The settings file isn't created until the settings window is closed, so we'll need to use our own
+    userDir = pathlib.Path.home()
+    settingsDir = os.path.join(
+        userDir, "AppData", "Local", "Roblox", "GlobalSettings_13.xml")
+    shutil.copyfile("GlobalSettings_13.xml", settingsDir)
 
 
 launcherPath = downloadStudioLauncher()
@@ -128,6 +141,7 @@ launchProcess(studioPath)
 requestKillStudioProcess()
 waitForContentPath()
 createPluginsDirectory()
+createSettingsFile()
 time.sleep(5)
 forceKillStudioProcess()
 

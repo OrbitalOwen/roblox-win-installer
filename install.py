@@ -126,7 +126,7 @@ def removeRobloxDirectory():
 def createSettingsFile():
     log('Creating settings file')
 
-    # We want this to run fast, so let's disable graphics
+    # We want this to run fast, so let's turn the graphics down (disabling prevents run-in-roblox from working)
     # The settings file isn't created until the settings window is closed, so we'll need to use our own
     # Studio doesn't recognise %UserProfile% so we need to replace it in our template
 

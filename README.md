@@ -10,6 +10,8 @@ Please check the script carefully before running it on your machine as it takes 
 
 For an example GitHub action, see the `.github/workflows` directory. For a platform agnostic example, see below:
 
+Powershell:
+
 ```powershell
 # Download this repo (there are currently no releases)
 git clone git@github.com:OrbitalOwen/roblox-win-installer.git

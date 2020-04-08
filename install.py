@@ -6,6 +6,7 @@ import time
 import psutil
 import winreg
 import pathlib
+import shutil
 
 
 def log(string):
@@ -31,6 +32,7 @@ def getProcessPath(processName):
 
 
 def downloadStudioLauncher():
+    log('Downloading Studio')
     launcherPath = os.path.join(sys.path[0], 'RobloxStudioLauncherBeta.exe')
     url = 'http://setup.roblox.com/RobloxStudioLauncherBeta.exe'
     wget.download(url, launcherPath)
@@ -38,10 +40,12 @@ def downloadStudioLauncher():
 
 
 def launchProcess(executablePath):
+    log('Launching Studio')
     subprocess.Popen([executablePath])
 
 
 def installStudio(launcherPath):
+    log('Installing Studio')
     launchProcess(launcherPath)
     while True:
         # When RobloxStudioBeta.exe is running, the installer has completed
@@ -53,6 +57,8 @@ def installStudio(launcherPath):
 
 # Method inspired by: https://github.com/jeparlefrancais/run-in-roblox-ci
 def loginToStudio():
+    log('Logging into Studio')
+
     # These keys aren't created until studio's first run, keep retrying until they have been
 
     def func():
@@ -69,16 +75,20 @@ def loginToStudio():
 
 
 def requestKillStudioProcess():
+    log('Sending terminate signal to RobloxStudioBeta')
     os.system("taskkill /im RobloxStudioBeta.exe")
 
 
 def forceKillStudioProcess():
+    log('Forcefully terminate RobloxStudioBeta.exe')
     for proc in psutil.process_iter():
         if proc.name() == "RobloxStudioBeta.exe":
             proc.kill()
 
 
 def waitForContentPath():
+    log('Waiting for the content path to be registered')
+
     # The content path is used by applications like run-in-roblox to identify Studio's install directory
     # These keys aren't created until studio closes, so keep retrying until they exist
 
@@ -92,6 +102,8 @@ def waitForContentPath():
 
 
 def createPluginsDirectory():
+    log('Creating plugins directory')
+
     # The plugins directory isn't created during the install process
     # Tools like run-in-roblox need this, so let's create it
     userDir = pathlib.Path.home()
@@ -100,27 +112,23 @@ def createPluginsDirectory():
         os.makedirs(pluginsDir)
 
 
-log('Downloading Studio')
+def removeRobloxDirectory():
+    # Required in cases where roblox has been previously installed & used
+    # Removing this folder prevents the auto-save recovery dialogue from appearing
+    userDir = pathlib.Path.home()
+    robloxDir = os.path.join(userDir, "Documents", "Roblox")
+    if os.path.isdir(robloxDir):
+        shutil.rmtree(robloxDir)
+
+
 launcherPath = downloadStudioLauncher()
-
-log('Installing Studio')
 studioPath = installStudio(launcherPath)
-
-log('Logging into Studio')
 loginToStudio()
-
-log('Launching Studio')
 launchProcess(studioPath)
-
-log('Waiting for content path')
 requestKillStudioProcess()
 waitForContentPath()
-
-log('Creating plugins directory')
 createPluginsDirectory()
-
-log('Pausing, then closing studio')
 time.sleep(5)
 forceKillStudioProcess()
 
-log('Studio setup complete')
+log('Roblox Studio has been installed')

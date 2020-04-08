@@ -10,7 +10,7 @@ import shutil
 
 
 def log(string):
-    print('\n{}\n'.format(string), flush=True)
+    print(string, flush=True)
 
 
 def retryUntilSuccess(func):
@@ -40,7 +40,7 @@ def downloadStudioLauncher():
 
 
 def launchProcess(executablePath):
-    log('Launching Studio')
+    log('Launching {}'.format(executablePath))
     subprocess.Popen([executablePath])
 
 
@@ -113,12 +113,37 @@ def createPluginsDirectory():
 
 
 def removeRobloxDirectory():
+    log('Removing Roblox directory from Documents')
+
     # Required in cases where roblox has been previously installed & used
     # Removing this folder prevents the auto-save recovery dialogue from appearing
     userDir = pathlib.Path.home()
     robloxDir = os.path.join(userDir, "Documents", "Roblox")
     if os.path.isdir(robloxDir):
         shutil.rmtree(robloxDir)
+
+
+def createSettingsFile():
+    log('Creating settings file')
+
+    # We want this to run fast, so let's turn the graphics down (disabling prevents run-in-roblox from working)
+    # The settings file isn't created until the settings window is closed, so we'll need to use our own
+    # Studio doesn't recognise %UserProfile% so we need to replace it in our template
+
+    userDir = pathlib.Path.home()
+
+    templateFile = open("GlobalSettings_13.xml", "r")
+    templateString = templateFile.read()
+    templateFile.close()
+
+    userDirString = str(userDir).replace("\\", "/")
+    processedString = templateString.replace("%UserProfile%", userDirString)
+
+    settingsDir = os.path.join(
+        userDir, "AppData", "Local", "Roblox", "GlobalSettings_13.xml")
+    settingsFile = open(settingsDir, "w")
+    settingsFile.write(processedString)
+    settingsFile.close()
 
 
 launcherPath = downloadStudioLauncher()
@@ -128,6 +153,7 @@ launchProcess(studioPath)
 requestKillStudioProcess()
 waitForContentPath()
 createPluginsDirectory()
+createSettingsFile()
 time.sleep(5)
 forceKillStudioProcess()
 

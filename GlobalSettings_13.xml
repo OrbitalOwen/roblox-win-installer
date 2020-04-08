@@ -133,7 +133,7 @@
 			</Color3>
 			<token name="Language">0</token>
 			<float name="Line Thickness">0.0399999991</float>
-			<QDir name="LocalAssetsFolder">%LocalAppData%/Roblox/LocalAssets</QDir>
+			<QDir name="LocalAssetsFolder">%UserProfile%/AppData/Local/Roblox/LocalAssets</QDir>
 			<bool name="LuaDebuggerEnabled">true</bool>
 			<Color3 name="Matching Word Background Color">
 				<R>0.886274576</R>
@@ -156,10 +156,10 @@
 			<QFont name="Output Font">MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0</QFont>
 			<token name="Output Layout Mode">1</token>
 			<bool name="OverrideCoreScripts">false</bool>
-			<QDir name="OverrideCoreScriptsDir">%LocalAppData%/Roblox/CoreScriptOverrides</QDir>
+			<QDir name="OverrideCoreScriptsDir">%UserProfile%/AppData/Local/Roblox/CoreScriptOverrides</QDir>
 			<token name="PermissionLevelShown">0</token>
 			<bool name="PluginDebuggingEnabled">false</bool>
-			<QDir name="PluginsDir">%LocalAppData%/Roblox/Plugins</QDir>
+			<QDir name="PluginsDir">%UserProfile%/AppData/Local/Roblox/Plugins</QDir>
 			<Color3 name="Preprocessor Color">
 				<R>0.498039246</R>
 				<G>0</G>

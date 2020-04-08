@@ -128,10 +128,22 @@ def createSettingsFile():
 
     # We want this to run fast, so let's disable graphics
     # The settings file isn't created until the settings window is closed, so we'll need to use our own
+    # Studio doesn't recognise %UserProfile% so we need to replace it in our template
+
     userDir = pathlib.Path.home()
+
+    templateFile = open("GlobalSettings_13.xml", "r")
+    templateString = templateFile.read()
+    templateFile.close()
+
+    userDirString = str(userDir).replace("\\", "/")
+    processedString = templateString.replace("%UserProfile%", userDirString)
+
     settingsDir = os.path.join(
         userDir, "AppData", "Local", "Roblox", "GlobalSettings_13.xml")
-    shutil.copyfile("GlobalSettings_13.xml", settingsDir)
+    settingsFile = open(settingsDir, "w")
+    settingsFile.write(processedString)
+    settingsFile.close()
 
 
 launcherPath = downloadStudioLauncher()

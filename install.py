@@ -40,7 +40,7 @@ def downloadStudioLauncher():
 
 
 def launchProcess(executablePath):
-    log('Launching Studio')
+    log('Launching {}'.format(executablePath))
     subprocess.Popen([executablePath])
 
 

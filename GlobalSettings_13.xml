@@ -251,13 +251,13 @@
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<int name="AutoFRMLevel">1</int>
 			<bool name="EagerBulkExecution">false</bool>
-			<token name="EditQualityLevel">0</token>
+			<token name="EditQualityLevel">1</token>
 			<bool name="ExportMergeByMaterial">false</bool>
 			<token name="FrameRateManager">0</token>
-			<token name="GraphicsMode">7</token>
+			<token name="GraphicsMode">1</token>
 			<int name="MeshCacheSize">33554432</int>
 			<string name="Name">Rendering</string>
-			<token name="QualityLevel">0</token>
+			<token name="QualityLevel">1</token>
 			<bool name="ReloadAssets">false</bool>
 			<bool name="RenderCSGTrianglesDebug">false</bool>
 			<bool name="ShowBoundingBoxes">false</bool>

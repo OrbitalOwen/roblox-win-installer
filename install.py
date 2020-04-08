@@ -4,7 +4,7 @@ import wget
 import subprocess
 import time
 import psutil
-import winreg
+import winreg  # pylint: disable=import-error
 import pathlib
 import shutil
 

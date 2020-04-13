@@ -8,8 +8,6 @@ This could theoretically be used along with [rojo](https://github.com/rojo-rbx/r
 
 # Usage
 
-For an example GitHub action, see the `.github/workflows` directory. For a platform agnostic example, see below:
-
 Powershell:
 
 ```powershell

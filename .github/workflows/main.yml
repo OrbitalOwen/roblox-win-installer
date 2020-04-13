@@ -13,5 +13,3 @@ jobs:
             - uses: actions/checkout@v1
             - run: pip install wget psutil
             - run: python install.py "${{ secrets.ROBLOSECURITY }}"
-            - run: Invoke-WebRequest "https://github.com/OrbitalOwen/run-in-roblox/releases/download/0.2.0/run-in-roblox.exe" -OutFile run-in-roblox.exe
-            - run: .\\run-in-roblox.exe -t 1800 .\\demo\\test.lua

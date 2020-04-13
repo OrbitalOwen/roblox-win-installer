@@ -16,7 +16,7 @@ git clone git@github.com:OrbitalOwen/roblox-win-installer.git
 
 # Install Roblox Studio
 cd roblox-win-installer
-pip install wget psutil
+pip install -r requirements.txt
 py .\install.py $env:cookie
 
 # Download run-in-roblox (you could also build this from source using cargo install run-in-roblox)

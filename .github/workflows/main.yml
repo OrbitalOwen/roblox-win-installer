@@ -11,5 +11,5 @@ jobs:
         runs-on: windows-latest
         steps:
             - uses: actions/checkout@v1
-            - run: pip install wget psutil
+            - run: pip install -r requirements.txt
             - run: python install.py "${{ secrets.ROBLOSECURITY }}"

@@ -113,7 +113,7 @@ def createPluginsDirectory():
 
 
 def removeAutoSaveDirectory():
-    log('Deleting AutoSave directory if presenmt')
+    log('Deleting AutoSave directory if present')
 
     # Required in cases where roblox has been previously installed & used
     # Removing this folder prevents the auto-save recovery dialogue from appearing

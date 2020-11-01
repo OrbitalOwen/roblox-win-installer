@@ -13,3 +13,8 @@ jobs:
             - uses: actions/checkout@v1
             - run: pip install -r requirements.txt
             - run: python install.py "${{ secrets.ROBLOSECURITY }}"
+              timeout-minutes: 5
+            - uses: OrbitalOwen/desktop-screenshot-action@0.1
+              if: ${{ failure() }}
+              with:
+                  file-name: "desktop.jpg"

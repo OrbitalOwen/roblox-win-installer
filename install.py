@@ -148,9 +148,15 @@ def createSettingsFile():
 
 launcherPath = downloadStudioLauncher()
 studioPath = installStudio(launcherPath)
+
+# We need to wait between each action here to reduce the chance of studio crashing
+time.sleep(5)
 loginToStudio()
+time.sleep(5)
 launchProcess(studioPath)
+time.sleep(5)
 requestKillStudioProcess()
+time.sleep(5)
 waitForContentPath()
 createPluginsDirectory()
 removeAutoSaveDirectory()

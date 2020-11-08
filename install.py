@@ -163,8 +163,6 @@ studioPath = installStudio(launcherPath)
 
 # We need to wait between each action here to reduce the chance of studio crashing
 time.sleep(5)
-launchProcess(studioPath)
-time.sleep(5)
 waitForLastRun()
 time.sleep(5)
 requestKillStudioProcess()

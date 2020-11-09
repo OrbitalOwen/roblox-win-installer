@@ -105,6 +105,8 @@ def waitForContentPath():
     # These keys aren't created until studio closes, so keep retrying until they exist
 
     def func():
+        requestKillStudioProcess()
+        time.sleep(5)
         regKey = winreg.OpenKey(
             winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
         winreg.QueryValueEx(regKey, r'ContentFolder')
@@ -164,8 +166,6 @@ studioPath = installStudio(launcherPath)
 # We need to wait between each action here to reduce the chance of studio crashing
 time.sleep(5)
 waitForLastRun()
-time.sleep(5)
-requestKillStudioProcess()
 time.sleep(5)
 waitForContentPath()
 createPluginsDirectory()

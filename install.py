@@ -13,8 +13,9 @@ def log(string):
     print(string, flush=True)
 
 
-def retryUntilSuccess(func):
-    while True:
+def retryUntilSuccess(func, timeout = 0):
+    end = time.time() + timeout
+    while timeout > 0 and time.time() < end:
         try:
             func()
             return
@@ -106,11 +107,14 @@ def waitForContentPath():
 
     def func():
         requestKillStudioProcess() # Studio often ignores requests to kill, we should retry until it closes
-        time.sleep(5)
-        regKey = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
-        winreg.QueryValueEx(regKey, r'ContentFolder')
-        winreg.CloseKey(regKey)
+
+        def poll():
+            regKey = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
+            winreg.QueryValueEx(regKey, r'ContentFolder')
+            winreg.CloseKey(regKey)
+
+        retryUntilSuccess(poll, 5) # Poll for up to 5 seconds and then start over
 
     retryUntilSuccess(func)
 

@@ -76,7 +76,7 @@ def prepareStudioLogin():
 def waitForLastRun():
     log('Waiting for Studio to confirm run with login')
 
-    # This key is created when run and logged in
+    # This key is created when run and logged in. Once its created login was successful.
 
     def func():
         regKey = winreg.OpenKey(
@@ -105,7 +105,7 @@ def waitForContentPath():
     # These keys aren't created until studio closes, so keep retrying until they exist
 
     def func():
-        requestKillStudioProcess()
+        requestKillStudioProcess() # Studio often ignores requests to kill, we should retry until it closes
         time.sleep(5)
         regKey = winreg.OpenKey(
             winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)

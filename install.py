@@ -15,7 +15,7 @@ def log(string):
 
 def retryUntilSuccess(func, timeout = 0):
     end = time.time() + timeout
-    while timeout > 0 and time.time() < end:
+    while timeout <= 0 or time.time() < end:
         try:
             func()
             return

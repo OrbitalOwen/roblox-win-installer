@@ -13,8 +13,9 @@ def log(string):
     print(string, flush=True)
 
 
-def retryUntilSuccess(func):
-    while True:
+def retryUntilSuccess(func, timeout = 0):
+    end = time.time() + timeout
+    while timeout <= 0 or time.time() < end:
         try:
             func()
             return
@@ -56,17 +57,17 @@ def installStudio(launcherPath):
 
 
 # Method inspired by: https://github.com/jeparlefrancais/run-in-roblox-ci
-def loginToStudio():
-    log('Logging into Studio')
+def prepareStudioLogin():
+    log('Preparing login for Studio')
 
-    # These keys aren't created until studio's first run, keep retrying until they have been
+    # These keys aren't created until studio's first login, we must create them
 
     def func():
         key = "SEC::<YES>,EXP::<9999-01-01T00:00:00Z>,COOK::<{}>".format(
             sys.argv[1])
 
-        reg_robloxDotCom = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser\\roblox.com', access=winreg.KEY_WRITE)
+        reg_robloxDotCom = winreg.CreateKey(
+            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudioBrowser\\roblox.com')
         winreg.SetValueEx(reg_robloxDotCom,
                           r'.ROBLOSECURITY', 0, winreg.REG_SZ, key)
         winreg.CloseKey(reg_robloxDotCom)
@@ -93,10 +94,15 @@ def waitForContentPath():
     # These keys aren't created until studio closes, so keep retrying until they exist
 
     def func():
-        regKey = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
-        winreg.QueryValueEx(regKey, r'ContentFolder')
-        winreg.CloseKey(regKey)
+        requestKillStudioProcess() # Studio often ignores requests to kill, we should retry until it closes
+
+        def poll():
+            regKey = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_READ)
+            winreg.QueryValueEx(regKey, r'ContentFolder')
+            winreg.CloseKey(regKey)
+
+        retryUntilSuccess(poll, 5) # Poll for up to 5 seconds and then start over
 
     retryUntilSuccess(func)
 
@@ -145,17 +151,11 @@ def createSettingsFile():
     settingsFile.write(processedString)
     settingsFile.close()
 
-
+prepareStudioLogin()
 launcherPath = downloadStudioLauncher()
 studioPath = installStudio(launcherPath)
 
 # We need to wait between each action here to reduce the chance of studio crashing
-time.sleep(5)
-loginToStudio()
-time.sleep(5)
-launchProcess(studioPath)
-time.sleep(5)
-requestKillStudioProcess()
 time.sleep(5)
 waitForContentPath()
 createPluginsDirectory()

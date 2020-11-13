@@ -74,18 +74,6 @@ def prepareStudioLogin():
 
     retryUntilSuccess(func)
 
-def waitForLastRun():
-    log('Waiting for Studio to confirm run with login')
-
-    # This key is created when run and logged in. Once its created login was successful.
-
-    def func():
-        regKey = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\Retention', access=winreg.KEY_READ)
-        winreg.QueryValueEx(regKey, r'LastRunDate')
-        winreg.CloseKey(regKey)
-
-    retryUntilSuccess(func)
 
 def requestKillStudioProcess():
     log('Sending terminate signal to RobloxStudioBeta')
@@ -168,8 +156,6 @@ launcherPath = downloadStudioLauncher()
 studioPath = installStudio(launcherPath)
 
 # We need to wait between each action here to reduce the chance of studio crashing
-time.sleep(5)
-waitForLastRun()
 time.sleep(5)
 waitForContentPath()
 createPluginsDirectory()

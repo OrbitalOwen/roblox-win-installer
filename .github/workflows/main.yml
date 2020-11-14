@@ -9,8 +9,18 @@ on:
 jobs:
     name:
         runs-on: windows-latest
-        timeout-minutes: 5
         steps:
             - uses: actions/checkout@v1
-            - run: pip install -r requirements.txt
-            - run: python install.py "${{ secrets.ROBLOSECURITY }}"
+            - name: Install Foreman
+              uses: rojo-rbx/setup-foreman@v1
+              with:
+                token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Install requirements
+              run: pip install -r requirements.txt
+            - name: Install roblox
+              # Fork accessible cookie is for a throwaway account. Please don't invalidate it, that'd be super lame.
+              run: python install.py $(If (![string]::IsNullOrEmpty("${{ secrets.ROBLOSECURITY }}")) {"${{ secrets.ROBLOSECURITY }}"} Else {"_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_D1CC1DCE0E8B1B267AA56040CD6A44950C20B37F8B415FD0180C003BCCA5BD8BCD5407541073301D1A9FA48AE72BB48DBBEB74AEDD05C464825E590942929715AD8CEBF4BAE955A620853FD4772D14151CE522E77B678981621CB9392F81D54508D418B7CAC9E1E74E2DFF91782113BEACC509D53949865B9E7925CC67D586A5269C8D5520CA516487C864DE491519C03E81DEB1F2A3B0D753AA70BCE8E88AEBA64BA2C84CB91490849A339C2379DA3579522DB3EACFD5126F8AC05738949C134BC8E0C1562CFE7A7E10356F1FE35DE8EE461ECB188D2DB007FC7916BD6B885C753C58AD45E787D05FF6B4FDD559CBC022EA1D2B48B38F903BCD88612D5149C03869DE458254A8E1C94A9F4158C2A509A6D95EB505EDCD926C5687A0C72E398A5D40C9BD6074CCD179119258E532F1A4E71FADE7"})
+              timeout-minutes: 5
+            - name: Run run-in-roblox
+              run: run-in-roblox --place .\\tests\\place.rbxl --script .\\tests\\script.lua
+              timeout-minutes: 5

@@ -1,10 +1,12 @@
+![roblox-win-installer](https://github.com/OrbitalOwen/roblox-win-installer/workflows/roblox-win-installer/badge.svg)
+
 # Overview
 
 Python script to download, install and authenticate Roblox Studio in a CI environment.
 
 Run with a ROBLOSECURITY cookie as an argument.
 
-This could theoretically be used along with [rojo](https://github.com/rojo-rbx/rojo), [run-in-roblox](https://github.com/rojo-rbx/run-in-roblox) and GitHub Actions / AppVeyor / others to create a gated CI system for Roblox projects that has full access to the Roblox API. In practice, you may find [TestEZ CLI](https://github.com/Roblox/testez) with [lemur](https://github.com/LPGhatguy/lemur) a more reliable solution (see [Warnings](#Warnings)).
+This can be used along with [rojo](https://github.com/rojo-rbx/rojo), [run-in-roblox](https://github.com/rojo-rbx/run-in-roblox) and GitHub Actions / AppVeyor / others to create a gated CI system for Roblox projects that has full access to the Roblox API. In practice, you may find [TestEZ CLI](https://github.com/Roblox/testez) with [lemur](https://github.com/LPGhatguy/lemur) a more reliable solution (see [Warnings](#Warnings)).
 
 # Usage
 

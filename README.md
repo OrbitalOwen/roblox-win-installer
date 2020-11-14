@@ -1,5 +1,7 @@
 ![roblox-win-installer](https://github.com/OrbitalOwen/roblox-win-installer/workflows/roblox-win-installer/badge.svg)
 
+_This installer is brittle and can break with changes to the Roblox Studio installer. An actions workflow runs every 12 hours to verify it is working correctly and its status can be seen above._
+
 # Overview
 
 Python script to download, install and authenticate Roblox Studio in a CI environment.

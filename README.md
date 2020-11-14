@@ -12,7 +12,16 @@ This can be used along with [rojo](https://github.com/rojo-rbx/rojo), [run-in-ro
 
 # Usage
 
-Powershell:
+If you are using GitHub Actions, it is recommended you use [roblox-win-installer-action](https://github.com/OrbitalOwen/roblox-win-installer-action). This is less verbose, and will automatically use the most recent version.
+
+```yml
+- uses: OrbitalOwen/roblox-win-installer-action@1.0
+  with:
+      cookie: $$ {{ secrets.ROBLOSECURITY }}
+      token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Alternatively, if you are using Powershell:
 
 ```powershell
 Invoke-WebRequest -Uri "https://github.com/OrbitalOwen/roblox-win-installer/archive/0.4.zip" -OutFile roblox-win-installer.zip

@@ -24,8 +24,3 @@ jobs:
             - name: Run run-in-roblox
               run: run-in-roblox --place .\\tests\\place.rbxl --script .\\tests\\script.lua
               timeout-minutes: 5
-            - name: Screenshot failiure
-              uses: OrbitalOwen/desktop-screenshot-action@0.1
-              if: failure()
-              with:
-                file-name: 'desktop.jpg'

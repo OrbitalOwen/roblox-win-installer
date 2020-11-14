@@ -1,3 +1,5 @@
+![roblox-win-installer](https://github.com/OrbitalOwen/roblox-win-installer/workflows/roblox-win-installer/badge.svg)
+
 # Overview
 
 Python script to download, install and authenticate Roblox Studio in a CI environment.

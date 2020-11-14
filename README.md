@@ -15,9 +15,9 @@ This can be used along with [rojo](https://github.com/rojo-rbx/rojo), [run-in-ro
 Powershell:
 
 ```powershell
-Invoke-WebRequest -Uri "https://github.com/OrbitalOwen/roblox-win-installer/archive/0.3.zip" -OutFile roblox-win-installer.zip
+Invoke-WebRequest -Uri "https://github.com/OrbitalOwen/roblox-win-installer/archive/0.4.zip" -OutFile roblox-win-installer.zip
 Expand-Archive -LiteralPath roblox-win-installer.zip -DestinationPath .
-cd roblox-win-installer-0.3
+cd roblox-win-installer-0.4
 pip install -r requirements.txt
 python install.py "${{ secrets.ROBLOSECURITY }}"
 ```

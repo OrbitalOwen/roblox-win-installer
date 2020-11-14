@@ -21,6 +21,7 @@ def retryUntilSuccess(func, timeout = 0):
             return
         except:
             time.sleep(0.1)
+    raise RuntimeError("Retry timed out.")
 
 
 def getProcessPath(processName):

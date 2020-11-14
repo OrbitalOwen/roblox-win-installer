@@ -13,7 +13,7 @@ def log(string):
     print(string, flush=True)
 
 
-def retryUntilSuccess(func, timeout = 0):
+def retryUntilSuccess(func, timeout=0):
     end = time.time() + timeout
     while timeout <= 0 or time.time() < end:
         try:
@@ -95,7 +95,8 @@ def waitForContentPath():
     # These keys aren't created until studio closes, so keep retrying until they exist
 
     def func():
-        requestKillStudioProcess() # Studio often ignores requests to kill, we should retry until it closes
+        # Studio often ignores requests to kill, we should retry until it closes
+        requestKillStudioProcess()
 
         def poll():
             regKey = winreg.OpenKey(
@@ -103,7 +104,8 @@ def waitForContentPath():
             winreg.QueryValueEx(regKey, r'ContentFolder')
             winreg.CloseKey(regKey)
 
-        retryUntilSuccess(poll, 5) # Poll for up to 5 seconds and then start over
+        # Poll for up to 5 seconds and then start over
+        retryUntilSuccess(poll, 5)
 
     retryUntilSuccess(func)
 
@@ -152,6 +154,7 @@ def createSettingsFile():
     settingsFile.write(processedString)
     settingsFile.close()
 
+
 prepareStudioLogin()
 launcherPath = downloadStudioLauncher()
 studioPath = installStudio(launcherPath)
@@ -166,3 +169,4 @@ time.sleep(5)
 forceKillStudioProcess()
 
 log('Roblox Studio has been installed')
+exit(0)

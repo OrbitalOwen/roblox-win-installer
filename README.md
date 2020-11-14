@@ -17,7 +17,7 @@ If you are using GitHub Actions, it is recommended you use [roblox-win-installer
 ```yml
 - uses: OrbitalOwen/roblox-win-installer-action@1.0
   with:
-      cookie: $$ {{ secrets.ROBLOSECURITY }}
+      cookie: ${{ secrets.ROBLOSECURITY }}
       token: ${{ secrets.GITHUB_TOKEN }}
 ```
 

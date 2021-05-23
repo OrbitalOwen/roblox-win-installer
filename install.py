@@ -7,6 +7,7 @@ import psutil
 import winreg  # pylint: disable=import-error
 import pathlib
 import shutil
+import logging
 
 
 def log(string):
@@ -20,6 +21,7 @@ def retryUntilSuccess(func, timeout=0):
             func()
             return
         except:
+            logging.exception("")
             time.sleep(0.1)
     raise RuntimeError("Retry timed out.")
 

@@ -99,7 +99,10 @@ def prepareContentFolder():
     content_folder = getStudioFolderPath() + r"\\content/"
 
     def func():
-        regKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_WRITE)
+        try:
+            regKey = winreg.OpenKeyEx(winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_WRITE)
+        except:
+            regKey = winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, r'Software\\Roblox\\RobloxStudio', access=winreg.KEY_WRITE)
         winreg.SetValueEx(regKey, r'ContentFolder', 0, winreg.REG_SZ, content_folder)
         winreg.CloseKey(regKey)
 

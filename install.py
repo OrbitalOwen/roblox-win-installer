@@ -83,20 +83,11 @@ def forceKillStudioProcess():
     os.system("taskkill /f /im RobloxStudioBeta.exe")
 
 
-versions_dir = r"C:\\Program Files (x86)\\Roblox\\Versions\\"
-
-
-def getStudioFolderPath():
-    for child in os.listdir(versions_dir):
-        child_path = versions_dir + child
-        if os.path.exists(child_path + r"\\RobloxStudioBeta.exe"):
-            return child_path
-
-
-def prepareContentFolder():
+def prepareContentFolder(studioPath):
     log('Preparing ContentFolder for Studio')
 
-    content_folder = getStudioFolderPath() + r"\\content/"
+    # Studio adds a forward slash to the end, not sure if this is intentional..
+    content_folder = os.path.dirname(studioPath) + r"\\content/"
 
     def func():
         try:
@@ -158,7 +149,7 @@ prepareStudioLogin()
 launcherPath = downloadStudioLauncher()
 studioPath = installStudio(launcherPath)
 forceKillStudioProcess()
-prepareContentFolder()
+prepareContentFolder(studioPath)
 createPluginsDirectory()
 removeAutoSaveDirectory()
 createSettingsFile()

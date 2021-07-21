@@ -26,7 +26,7 @@ Alternatively, if you are using Powershell:
 ```powershell
 Invoke-WebRequest -Uri "https://github.com/OrbitalOwen/roblox-win-installer/archive/0.5.zip" -OutFile roblox-win-installer.zip
 Expand-Archive -LiteralPath roblox-win-installer.zip -DestinationPath .
-cd roblox-win-installer-0.4
+cd roblox-win-installer-0.5
 pip install -r requirements.txt
 python install.py "${{ secrets.ROBLOSECURITY }}"
 ```
